@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Share the questionnaire</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; margin: 0; padding: 24px; background:#f6f8fa; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 16px; }
+  .card { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; margin: 12px 0 20px; box-shadow: 0 1px 0 rgba(27,31,36,0.04);}
+  .head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+  .lang { font-weight:600; font-size:1rem; }
+  button.copy { border:1px solid #d0d7de; background:#f6f8fa; border-radius:8px; padding:6px 10px; cursor:pointer; }
+  button.copy:active { transform: translateY(1px); }
+  textarea { width:100%; min-height: 140px; border:1px solid #d0d7de; border-radius:8px; padding:10px; resize:vertical; font:inherit; background:#fff; }
+  .note { font-size: 0.9rem; color:#57606a; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Copy, paste, and share 🙌</h1>
+
+  <div class="card">
+    <div class="head">
+      <div class="lang">EN</div>
+      <button class="copy" data-target="#en">Copy</button>
+    </div>
+    <textarea id="en" readonly>
+Hey! I’m at a conference, and there’s this fun guy who wants us to share a questionnaire with our friends to replicate results he got from Czech participants. Would you mind taking part? It’s a crowd estimation study and should be fun! It only takes about 6 minutes.
+Just one thing: it’s best to fill it out on a computer rather than a smartphone, as the screen might be too small.
+Here’s the link: https://crowdest2.uklab.cz
+    </textarea>
+    <div class="note">Tip: after copying, paste into WhatsApp, Messenger, e-mail, etc.</div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div class="lang">PL</div>
+      <button class="copy" data-target="#pl">Kopiuj</button>
+    </div>
+    <textarea id="pl" readonly>
+Hej! Jestem na konferencji i jest tu fajny facet, który chce, żebyśmy podzielili się z przyjaciółmi ankietą, aby powtórzyć wyniki, które uzyskał od czeskich uczestników. Wziąłbyś w niej udział? To badanie dotyczące szacowania liczebności i powinno być całkiem zabawne! Zajmie tylko około 6 minut.
+Tylko jedna rzecz: najlepiej wypełnić ją na komputerze, a nie na smartfonie, bo ekran może być za mały.
+Oto link: https://crowdest2.uklab.cz
+    </textarea>
+  </div>
+</div>
+
+<script>
+function copyText(selector, button) {
+  const el = document.querySelector(selector);
+  const text = el.value.trim();
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => flash(button), () => fallback(el, button));
+  } else {
+    fallback(el, button);
+  }
+}
+function fallback(el, button) {
+  el.removeAttribute('readonly');
+  el.select();
+  try { document.execCommand('copy'); } catch {}
+  el.setAttribute('readonly', '');
+  el.blur();
+  flash(button);
+}
+function flash(button) {
+  const original = button.textContent;
+  button.textContent = 'Copied!';
+  setTimeout(() => button.textContent = original, 1200);
+}
+document.querySelectorAll('button.copy').forEach(btn => {
+  btn.addEventListener('click', () => copyText(btn.dataset.target, btn));
+});
+</script>
+</body>
+</html>
